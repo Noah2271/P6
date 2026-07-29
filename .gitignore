@@ -1,10 +1,9 @@
-# Virtual environments
+# dont include virtual environment in commits
 .venv/
 venv/
 env/
 ENV/
 
-# This project currently has a venv at repo root
 Include/
 Lib/
 Scripts/
