@@ -1,0 +1,11 @@
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# This project currently has a venv at repo root
+Include/
+Lib/
+Scripts/
+pyvenv.cfg
