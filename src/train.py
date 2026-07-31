@@ -13,6 +13,7 @@ models = {
     'basic_model': BasicModel,
 }
 
+
 def plot_history(history):
     acc = history.history['accuracy']
     val_acc = history.history['val_accuracy']
@@ -45,7 +46,17 @@ if __name__ == "__main__":
     # plot_history(history)
     # 
     # Your code should change the number of epochs
-    epochs = 1
+    epochs = 40
+
+    # other test that I need (mostly for the pdf)
+    # if you need the other, uncomment it and just comment this one and vice versa
+    train_dataset, validation_dataset, test_dataset = get_datasets()
+    model = Model.load_model("results/p2best_model_epoch_39.keras")
+    model.evaluate(test_dataset)
+    history = np.load('results/basic_model_20_epochs_timestamp_1785445910.npy',allow_pickle='TRUE').item()
+    plot_history(history)
+    '''
+    # original test
     print('* Data preprocessing')
     train_dataset, validation_dataset, test_dataset = get_datasets()
     name = 'basic_model'
@@ -64,3 +75,7 @@ if __name__ == "__main__":
     np.save('results/{}.npy'.format(model_name), history)
     print('* Model saved as {}'.format(filename))
     plot_history(history)
+    print(train_dataset.class_names)'''
+
+
+    

@@ -16,11 +16,22 @@ class Model:
         raise Exception("define_model not implemented yet.")
 
     def train_model(self, train_dataset, validation_dataset, epochs):
+        from tensorflow.keras.callbacks import ModelCheckpoint
+        # save for every epoch because best model before overfitting must be submitted
+        # you can comment it out if you don't want it 
+        checkpoint = ModelCheckpoint(
+        filepath = "results/p2best_model_epoch_{epoch:02d}.keras",
+        save_frequency = 'epoch',
+        save_best_only = True,
+        )
+        # end of added lines for printing best epochs
         history = self.model.fit(
             x=train_dataset,
             epochs=epochs,
             verbose="auto",
-            validation_data=validation_dataset
+            validation_data=validation_dataset,
+            # Line below also used for saving for best epochs (before overfitting), feel free to comment out
+            callbacks=[checkpoint]
         )
 
         return history
