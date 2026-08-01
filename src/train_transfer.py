@@ -13,7 +13,7 @@ categories_count = 3
 
 models = {
     'transfered_model': TransferedModel,
-    'random_model': RandomModel,
+    #'random_model': RandomModel,
 }
 
 def plot_history_diff(initial_hist, transfered_hist):
@@ -49,4 +49,4 @@ if __name__ == "__main__":
         print('* Confusion Matrix for {}'.format(name))
         print(model.get_confusion_matrix(test_dataset))
     assert len(histories) == 2, "The number of trained models is not equal to two"
-    plot_history_diff(*histories)
+    # plot_history_diff(*histories)
