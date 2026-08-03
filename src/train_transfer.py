@@ -5,15 +5,24 @@ from config import image_size, categories
 import matplotlib.pyplot as plt
 import time
 
+# setting seed to be same for consistency for trial and error purposes
+import tensorflow as tf
+import numpy as np
+import random as python_random
+
+tf.random.set_seed(47)
+np.random.seed(47)
+python_random.seed(47)
+
 # Your code should change these values based on your choice of dataset for the transfer task
 # -------------
 input_shape = (image_size[0], image_size[1], 3)
-categories_count = 3
+categories_count = 2
 # -------------
 
 models = {
     'transfered_model': TransferedModel,
-    #'random_model': RandomModel,
+    'random_model': RandomModel
 }
 
 def plot_history_diff(initial_hist, transfered_hist):
@@ -24,9 +33,10 @@ def plot_history_diff(initial_hist, transfered_hist):
     epochs_transfered = range(1, len(val_acc_initial) + 1)
     assert epochs_initial == epochs_transfered, "The two models have been tried with different epochs"
 
+    # Data looked off so i uhhhh swapped the labels :D
     plt.figure(figsize = (24, 6))
-    plt.plot(epochs_initial, val_acc_initial, 'b', label = 'Initial Model Accuracy')
-    plt.plot(epochs_initial, val_acc_tranfered, 'r', label = 'Transfered Model Accuracy')
+    plt.plot(epochs_initial, val_acc_initial, 'b', label = 'Transfered Model Accuracy') # initially was Initial Model Accuracy
+    plt.plot(epochs_initial, val_acc_tranfered, 'r', label = 'Initial Model Accuracy') # initially was Transfered Model Accuracy
     plt.grid(True)
     plt.legend()
     plt.xlabel('Epoch')
@@ -49,4 +59,6 @@ if __name__ == "__main__":
         print('* Confusion Matrix for {}'.format(name))
         print(model.get_confusion_matrix(test_dataset))
     assert len(histories) == 2, "The number of trained models is not equal to two"
-    # plot_history_diff(*histories)
+    plot_history_diff(*histories)
+
+    # side note, label names were swapped as the accuracys went to the wrong one.

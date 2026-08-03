@@ -14,7 +14,6 @@ class TransferedModel(Model):
         # use this model by removing the last layer, adding dense layers and an output layer
         
         # load the best model
-        #base_model = load_model('results/best_model_epoch_02.keras')
         base_model = load_model('results/best_model_epoch_11.keras')
 
         # freeze all of its layers so training doesn't touch them
@@ -22,22 +21,20 @@ class TransferedModel(Model):
             layer.trainable = False
 
         # cut off the final softmax layer, keep everything before it
-        x = base_model.layers[-2].output
+        x = base_model.get_layer('flatten').output
+        x = layers.BatchNormalization()(x)
 
         # bolt on new trainable layers for the new task
-        x = layers.Dense(64, activation='relu')(x)
-        output = layers.Dense(categories_count, activation='softmax')(x)
+        x = layers.Dense(64, activation='relu', name= 'transfer_dense_1')(x)
+        output = layers.Dense(categories_count, activation='softmax', name='transfer_output')(x)
 
         self.model = models.Model(inputs=base_model.input, outputs=output)
-
-    def _define_model(self, input_shape, categories_count):
-        pass
     
     def _compile_model(self):
         # Your code goes here
         # you have to compile the keras model, similar to the example in the writeup
         self.model.compile(
-            optimizer=Adam(learning_rate=0.001),
+            optimizer=Adam(learning_rate=0.0001),
             loss='categorical_crossentropy',
             metrics=['accuracy'],
         )

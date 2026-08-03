@@ -2,6 +2,8 @@ from config import BOARD_SIZE, categories, image_size
 from tensorflow.keras import models
 import numpy as np
 import tensorflow as tf
+from tensorflow.keras.models import load_model
+
 
 class TicTacToePlayer:
     def get_move(self, board_state):
@@ -92,7 +94,11 @@ class UserWebcamPlayer:
         except Exception as e:
             # error accessing the webcam, or processing the image
             raise e
-    
+
+    def __init__(self):
+        # load model once here, not every time we take a picture
+        self.model = load_model('results/best_model_epoch_11.keras')
+
     def _get_emotion(self, img) -> int:
         # Your code goes here
         #
@@ -107,8 +113,22 @@ class UserWebcamPlayer:
         # The classification value should be 0, 1, or 2 for neutral, happy or surprise respectively
 
         # return an integer (0, 1 or 2), otherwise the code will throw an error
-        return 1
-        pass
+        # img is NxN grayscale, values 0-255
+
+        # resize for model (150x150)
+        resized = cv2.resize(img, image_size)
+
+        # fake rgb
+        rgb = np.stack([resized] * 3, axis=-1)
+
+        # add a batch dimension: model expects (batch, H, W, 3)
+        batch = np.expand_dims(rgb, axis=0)
+
+        prediction = self.model.predict(batch, verbose=0)
+        emotion = int(np.argmax(prediction, axis=-1)[0])
+
+        # gang this sucks 
+        return emotion
     
     def get_move(self, board_state):
         row, col = None, None
